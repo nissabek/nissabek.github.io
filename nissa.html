@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nissa — til o'qituvchisi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink: #16221E;
+    --paper: #F3ECDA;
+    --gold: #C89A4A;
+    --teal: #4F7C74;
+    --paper-dim: #E4DAC0;
+    --ink-soft: rgba(243,236,218,0.62);
+  }
+  *{ box-sizing: border-box; margin:0; padding:0; }
+  html{ scroll-behavior: smooth; }
+  body{
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'IBM Plex Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* subtle paper-grain / ledger lines texture */
+  body::before{
+    content:"";
+    position: fixed; inset:0;
+    background-image:
+      repeating-linear-gradient(180deg, rgba(243,236,218,0.035) 0px, rgba(243,236,218,0.035) 1px, transparent 1px, transparent 34px);
+    pointer-events:none;
+    z-index:0;
+  }
+
+  .wrap{
+    position:relative;
+    z-index:1;
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 44px 24px 60px;
+  }
+
+  /* ---------- HERO: dictionary entry ---------- */
+  .entry-tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity:0;
+    animation: rise 0.7s ease forwards;
+  }
+
+  .headword{
+    font-family:'Fraunces', serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-size: clamp(52px, 15vw, 76px);
+    line-height: 0.95;
+    margin-top: 10px;
+    color: var(--paper);
+    opacity:0;
+    animation: rise 0.8s ease 0.1s forwards;
+  }
+
+  .pron-row{
+    display:flex;
+    align-items:baseline;
+    gap:12px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+    opacity:0;
+    animation: rise 0.8s ease 0.22s forwards;
+  }
+  .ipa{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 15px;
+    color: var(--teal);
+  }
+  .pos{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-style: italic;
+    color: var(--ink-soft);
+    border-left: 1px solid rgba(243,236,218,0.25);
+    padding-left: 12px;
+  }
+
+  .definitions{
+    margin-top: 26px;
+    display:flex;
+    flex-direction:column;
+    gap: 10px;
+    opacity:0;
+    animation: rise 0.8s ease 0.34s forwards;
+  }
+  .def{
+    display:flex;
+    gap: 12px;
+    font-size: 15.5px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+  }
+  .def b{
+    font-family:'IBM Plex Mono', monospace;
+    color: var(--gold);
+    font-weight: 500;
+    flex-shrink:0;
+  }
+  .def strong{ color: var(--paper); font-weight: 600; }
+
+  @keyframes rise{
+    from{ opacity:0; transform: translateY(14px); }
+    to{ opacity:1; transform: translateY(0); }
+  }
+
+  /* ---------- divider ---------- */
+  .divider{
+    margin: 40px 0 30px;
+    display:flex;
+    align-items:center;
+    gap: 14px;
+    color: var(--ink-soft);
+  }
+  .divider .line{ flex:1; height:1px; background: rgba(243,236,218,0.18); }
+  .divider span{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  /* ---------- courses / glossary cards ---------- */
+  .courses{
+    display:flex;
+    flex-direction:column;
+    gap: 10px;
+  }
+  .course{
+    background: rgba(243,236,218,0.045);
+    border: 1px solid rgba(243,236,218,0.12);
+    border-radius: 3px;
+    padding: 16px 18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap: 12px;
+    transition: border-color 0.25s ease, background 0.25s ease;
+  }
+  .course:hover{ border-color: rgba(200,154,74,0.55); background: rgba(243,236,218,0.07); }
+  .course .name{
+    font-family:'Fraunces', serif;
+    font-weight: 500;
+    font-size: 17px;
+    color: var(--paper);
+  }
+  .course .lang{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--teal);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-top: 3px;
+  }
+  .course .mark{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--gold);
+    white-space: nowrap;
+  }
+
+  .note{
+    margin-top: 18px;
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    font-style: italic;
+    border-left: 2px solid var(--gold);
+    padding-left: 14px;
+  }
+
+  /* ---------- CTA buttons ---------- */
+  .cta-group{
+    margin-top: 40px;
+    display:flex;
+    flex-direction:column;
+    gap: 12px;
+  }
+  .cta{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 14px;
+    text-decoration:none;
+    padding: 18px 20px;
+    border-radius: 3px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .cta:active{ transform: scale(0.98); }
+
+  .cta-primary{
+    background: var(--gold);
+    color: var(--ink);
+  }
+  .cta-primary .t{ font-weight:600; font-size: 16px; }
+  .cta-primary .s{ font-family:'IBM Plex Mono', monospace; font-size: 11.5px; opacity:0.72; margin-top:2px; }
+  .cta-primary:hover{ box-shadow: 0 6px 22px rgba(200,154,74,0.28); }
+
+  .cta-secondary{
+    background: transparent;
+    border: 1px solid rgba(243,236,218,0.28);
+    color: var(--paper);
+  }
+  .cta-secondary .t{ font-weight:500; font-size: 15px; }
+  .cta-secondary .s{ font-family:'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink-soft); margin-top:2px; }
+  .cta-secondary:hover{ border-color: var(--teal); }
+
+  .arrow{ font-size: 18px; flex-shrink:0; }
+
+  footer{
+    margin-top: 48px;
+    text-align:center;
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: rgba(243,236,218,0.35);
+    text-transform: uppercase;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .entry-tag, .headword, .pron-row, .definitions{ animation: none; opacity:1; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+    <div class="entry-tag">lug'at yozuvi · dictionary entry</div>
+    <h1 class="headword">Nissa</h1>
+    <div class="pron-row">
+      <span class="ipa">/nis:ɑ/</span>
+      <span class="pos">ism, o'qituvchi</span>
+    </div>
+
+    <div class="definitions">
+      <div class="def"><b>01</b><span>4-kurs talabasi va <strong>qiyosiy tilshunos</strong> — tillarning tuzilishi va bir-biriga ta'sirini o'rganadi.</span></div>
+      <div class="def"><b>02</b><span><strong>Argentina Yozuvchilar Uyushmasi</strong> a'zosi.</span></div>
+      <div class="def"><b>03</b><span>Har bir o'quvchi bilan <strong>individual</strong> ishlaydi — darslar online formatda o'tkaziladi.</span></div>
+    </div>
+
+    <div class="divider"><span>hozirgi yo'nalishlar</span><div class="line"></div></div>
+
+    <div class="courses">
+      <div class="course">
+        <div>
+          <div class="name">General English</div>
+          <div class="lang">kattalar uchun · barcha daraja</div>
+        </div>
+        <div class="mark">EN</div>
+      </div>
+      <div class="course">
+        <div>
+          <div class="name">English Kids</div>
+          <div class="lang">bolalar uchun</div>
+        </div>
+        <div class="mark">EN</div>
+      </div>
+      <div class="course">
+        <div>
+          <div class="name">Turk tili</div>
+          <div class="lang">CEFR standarti bo'yicha</div>
+        </div>
+        <div class="mark">TR</div>
+      </div>
+      <div class="course">
+        <div>
+          <div class="name">O'zbek tili va adabiyoti</div>
+          <div class="lang">milliy sertifikatga tayyorlov</div>
+        </div>
+        <div class="mark">UZ</div>
+      </div>
+    </div>
+
+    <div class="note">Barcha yo'nalishlarga qabul davom etmoqda — guruhga qo'shilish uchun quyidagi tugmalardan foydalaning.</div>
+
+    <div class="divider"><span>bog'lanish</span><div class="line"></div></div>
+
+    <div class="cta-group">
+      <a class="cta cta-primary" href="https://t.me/N155SA" target="_blank" rel="noopener">
+        <div>
+          <div class="t">Telegram kanal</div>
+          <div class="s">@N155SA — yangiliklar va e'lonlar</div>
+        </div>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="cta cta-secondary" href="https://t.me/esse_tekshiruvN" target="_blank" rel="noopener">
+        <div>
+          <div class="t">Esse tekshiruv guruhi</div>
+          <div class="s">@esse_tekshiruvN</div>
+        </div>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="cta cta-secondary" href="https://t.me/nissa_turktili" target="_blank" rel="noopener">
+        <div>
+          <div class="t">Turk tili guruhi</div>
+          <div class="s">@nissa_turktili</div>
+        </div>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="cta cta-secondary" href="https://t.me/AllanazarovaNn" target="_blank" rel="noopener">
+        <div>
+          <div class="t">Shaxsiy profil</div>
+          <div class="s">@AllanazarovaNn — savollar uchun</div>
+        </div>
+        <span class="arrow">→</span>
+      </a>
+    </div>
+
+    <footer>Nissa · til o'qituvchisi</footer>
+  </div>
+</body>
+</html>
